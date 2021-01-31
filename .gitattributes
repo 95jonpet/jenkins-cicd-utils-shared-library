@@ -1,0 +1,4 @@
+* text=auto eol=lf
+*.txt text
+*.groovy text
+*.sh text

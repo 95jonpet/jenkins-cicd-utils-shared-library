@@ -1,0 +1,26 @@
+Deploy a directory over SSH while keeping multiple revisions.
+
+The commands <code>scp</code and <code>ssh</code> must be available on the current node.
+
+<dl>
+  <dt><code>sourceDirectory</code></dt>
+  <dd>
+    Path to the source directory to deploy.
+    This path is relative to the current directory.
+  </dd>
+
+  <dt><code>targetDeployRoot</code></dt>
+  <dd>
+    Absolute path to the deployment root un the remote host.
+  </dd>
+
+  <dt><code>targetHost</code></dt>
+  <dd>
+    Remote host to deploy to.
+  </dd>
+
+  <dt><code>user</code></dt>
+  <dd>
+    The user account which should be used when authenticating with the remote host.
+  </dd>
+</dl>
