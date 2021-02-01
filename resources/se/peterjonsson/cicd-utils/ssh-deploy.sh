@@ -21,20 +21,20 @@ RELEASE=$(date +%s)
 TARGET="${USER}@${TARGET_HOST}"
 
 log_info "Preparing to release ${RELEASE}."
-ssh "${TARGET}" "mkdir -p '${ROOT}/releases'"
+ssh -i "${SSH_KEY_FILE}" -oStrictHostKeyChecking=no "${TARGET}" "mkdir -p '${ROOT}/releases'"
 
 log_info "Uploading release ${RELEASE}. This may take a while."
-scp -qr "${SOURCE_DIRECTORY}" "${TARGET}:${ROOT}/releases/${RELEASE}"
+scp -i "${SSH_KEY_FILE}" -oStrictHostKeyChecking=no -qr "${SOURCE_DIRECTORY}" "${TARGET}:${ROOT}/releases/${RELEASE}"
 
 # Atomically link $ROOT/current to the uploaded release on the target server.
 # See https://temochka.com/blog/posts/2017/02/17/atomic-symlinks.html.
 log_info "Promoting release ${RELEASE}."
-ssh "${TARGET}" "
+ssh -i "${SSH_KEY_FILE}" -oStrictHostKeyChecking=no "${TARGET}" "
   ln -s '${ROOT}/releases/${RELEASE}' '${ROOT}/releases/current'
   mv -Tf '${ROOT}/releases/current' '${ROOT}/current'
 "
 
 log_info "Deleting old releases."
-ssh "${TARGET}" "cd '${ROOT}/releases' && ls | sort -r | tail -n +6 | xargs -d '\n' -r rm -rf --"
+ssh -i "${SSH_KEY_FILE}" -oStrictHostKeyChecking=no "${TARGET}" "cd '${ROOT}/releases' && ls | sort -r | tail -n +6 | xargs -d '\n' -r rm -rf --"
 
 log_info "Successfully deployed release ${RELEASE}."

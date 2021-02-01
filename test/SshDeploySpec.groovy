@@ -12,7 +12,7 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
   @Test
   void '[sshDeploy] executes ssh-deploy.sh'() {
     when:
-    sshDeploy(sourceDirectory: _, targetDeployRoot: _, targetHost: _, user: _)
+    sshDeploy(credentialsId: _, sourceDirectory: _, targetDeployRoot: _, targetHost: _)
 
     then:
     1 * getPipelineMock('libraryResource')('se/peterjonsson/cicd-utils/ssh-deploy.sh') >> '<ssh-deploy.sh>'
@@ -30,18 +30,18 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
 
     when:
     sshDeploy(
+      credentialsId: _,
       sourceDirectory: '<SOURCE_DIR>',
       targetDeployRoot: '<TARGET_ROOT>',
-      targetHost: '<TARGET_HOST>',
-      user: '<USER>'
+      targetHost: '<TARGET_HOST>'
     )
 
     then:
     1 * getPipelineMock('sh')({
       it.script =~ /RELEASE=\$\(.*\)/
-      it.script =~ /TARGET="<USER>@<TARGET_HOST>"/
-      it.script =~ /ssh "\$\{TARGET\}" "mkdir -p '<TARGET_ROOT>\/releases'"/
-      it.script =~ /scp -qr "<SOURCE_DIR>" "\$\{TARGET\}:<TARGET_ROOT>\/releases\/\$\{RELEASE\}"/
+      it.script =~ /TARGET="\$\{USER\}@<TARGET_HOST>"/
+      it.script =~ /ssh -i "\$\{SSH_KEY_FILE\}" -oStrictHostKeyChecking=no "\$\{TARGET\}" "mkdir -p '<TARGET_ROOT>\/releases'"/
+      it.script =~ /scp -i "\$\{SSH_KEY_FILE\}" -oStrictHostKeyChecking=no -qr "<SOURCE_DIR>" "\$\{TARGET\}:<TARGET_ROOT>\/releases\/\$\{RELEASE\}"/
     })
   }
 
@@ -56,18 +56,19 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
 
     when:
     sshDeploy(
+      credentialsId: _,
       sourceDirectory: '<SOURCE_DIR>',
       targetDeployRoot: '<TARGET_ROOT>',
-      targetHost: '<TARGET_HOST>',
-      user: '<USER>'
+      targetHost: '<TARGET_HOST>'
     )
 
     then:
     1 * getPipelineMock('sh')({
       it.script =~ /RELEASE=\$\(.*\)/
       it.script =~
-        /(?s)ssh "\$\{TARGET\}" ".*ln -s '<TARGET_ROOT>\/releases\/\$\{RELEASE\}' '<TARGET_ROOT>\/releases\/current'.*"/
-      it.script =~ /(?s)ssh "\$\{TARGET\}" ".*mv -Tf '<TARGET_ROOT>\/releases\/current' '<TARGET_ROOT>\/current'.*"/
+        /(?s)ssh -i "\$\{SSH_KEY_FILE\}" -oStrictHostKeyChecking=no "\$\{TARGET\}" ".*ln -s '<TARGET_ROOT>\/releases\/\$\{RELEASE\}' '<TARGET_ROOT>\/releases\/current'.*"/
+      it.script =~
+        /(?s)ssh -i "\$\{SSH_KEY_FILE\}" -oStrictHostKeyChecking=no "\$\{TARGET\}" ".*mv -Tf '<TARGET_ROOT>\/releases\/current' '<TARGET_ROOT>\/current'.*"/
     })
   }
 
@@ -82,16 +83,16 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
 
     when:
     sshDeploy(
+      credentialsId: _,
       sourceDirectory: '<SOURCE_DIR>',
       targetDeployRoot: '<TARGET_ROOT>',
-      targetHost: '<TARGET_HOST>',
-      user: '<USER>'
+      targetHost: '<TARGET_HOST>'
     )
 
     then:
     1 * getPipelineMock('sh')({
       it.script =~
-        /ssh "\$\{TARGET\}" "cd '<TARGET_ROOT>\/releases' && ls | sort -r | tail -n +6 | xargs -d '\\n' -r rm -rf --"/
+        /ssh -i "\$\{SSH_KEY_FILE\}" -oStrictHostKeyChecking=no "\$\{TARGET\}" "cd '<TARGET_ROOT>\/releases' && ls | sort -r | tail -n +6 | xargs -d '\\n' -r rm -rf --"/
     })
   }
 }
