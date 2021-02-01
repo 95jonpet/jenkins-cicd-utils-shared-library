@@ -3,14 +3,14 @@
                       http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>se.peterjonsson.jenkins-libraries</groupId>
-  <artifactId>peterjonsson-ci</artifactId>
+  <groupId>se.peterjonsson.jenkins-cicd-utils-shared-library</groupId>
+  <artifactId>cicd-utils</artifactId>
   <version>${revision}${sha1}${changelist}</version>
 
   <description>CI/CD shared library for Jenkins.</description>
 
   <properties>
-    <revision>0.1</revision>
+    <revision>development</revision>
     <changelist>-SNAPSHOT</changelist>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -67,6 +67,13 @@
       <groupId>org.jenkins-ci.main</groupId>
       <artifactId>jenkins-core</artifactId>
       <version>2.277</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <!-- Needed to run tests with Java 11. -->
+      <groupId>org.jboss.modules</groupId>
+      <artifactId>jboss-modules</artifactId>
+      <version>1.11.0.Final</version>
       <scope>test</scope>
     </dependency>
     <dependency>
