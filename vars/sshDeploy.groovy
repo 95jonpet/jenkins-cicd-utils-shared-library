@@ -9,7 +9,7 @@ void call(Map config = [:]) {
   String targetDeployRoot = requireNonNull(config.targetDeployRoot, 'targetDeployRoot must not be null')
   String targetHost = requireNonNull(config.targetHost, 'targetHost must not be null')
 
-  String script = libraryResource('se/peterjonsson/cicd-utils/ssh-deploy.sh')
+  String script = libraryResource(resource: 'se/peterjonsson/cicd-utils/ssh-deploy.sh')
     .replaceAll(/\$\{ROOT\}/, targetDeployRoot)
     .replaceAll(/\$\{SOURCE_DIRECTORY\}/, sourceDirectory)
     .replaceAll(/\$\{TARGET_HOST\}/, targetHost)

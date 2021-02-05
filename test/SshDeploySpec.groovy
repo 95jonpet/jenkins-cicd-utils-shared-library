@@ -15,14 +15,14 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
     sshDeploy(credentialsId: _, sourceDirectory: _, targetDeployRoot: _, targetHost: _)
 
     then:
-    1 * getPipelineMock('libraryResource')('se/peterjonsson/cicd-utils/ssh-deploy.sh') >> '<ssh-deploy.sh>'
+    1 * getPipelineMock('libraryResource')(resource: 'se/peterjonsson/cicd-utils/ssh-deploy.sh') >> '<ssh-deploy.sh>'
     1 * getPipelineMock('sh')({ it.script == '<ssh-deploy.sh>' })
   }
 
   @Test
   void '[sshDeploy] uploads a release through scp'() {
     given:
-    1 * getPipelineMock('libraryResource')('se/peterjonsson/cicd-utils/ssh-deploy.sh') >> {
+    1 * getPipelineMock('libraryResource')(resource: 'se/peterjonsson/cicd-utils/ssh-deploy.sh') >> {
       def classLoader = getClass().getClassLoader();
       def file = new File(classLoader.getResource('se/peterjonsson/cicd-utils/ssh-deploy.sh').getFile())
       return file.getText('UTF-8')
@@ -48,7 +48,7 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
   @Test
   void '[sshDeploy] atomically marks the latest release as current'() {
     given:
-    1 * getPipelineMock('libraryResource')('se/peterjonsson/cicd-utils/ssh-deploy.sh') >> {
+    1 * getPipelineMock('libraryResource')(resource: 'se/peterjonsson/cicd-utils/ssh-deploy.sh') >> {
       def classLoader = getClass().getClassLoader();
       def file = new File(classLoader.getResource('se/peterjonsson/cicd-utils/ssh-deploy.sh').getFile())
       return file.getText('UTF-8')
@@ -75,7 +75,7 @@ class SshDeploySpec extends JenkinsPipelineSpecification {
   @Test
   void '[sshDeploy] deletes old releases'() {
     given:
-    1 * getPipelineMock('libraryResource')('se/peterjonsson/cicd-utils/ssh-deploy.sh') >> {
+    1 * getPipelineMock('libraryResource')(resource: 'se/peterjonsson/cicd-utils/ssh-deploy.sh') >> {
       def classLoader = getClass().getClassLoader();
       def file = new File(classLoader.getResource('se/peterjonsson/cicd-utils/ssh-deploy.sh').getFile())
       return file.getText('UTF-8')
